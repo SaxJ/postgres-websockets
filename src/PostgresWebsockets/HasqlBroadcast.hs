@@ -52,7 +52,7 @@ tryUntilConnected =
     shouldRetry _ con =
       case con of
         Left err -> do
-          putErrLn $ "Error connecting notification listener to database: " <> show err
+          PostgresWebsockets.HasqlBroadcast.putErrLn $ "Error connecting notification listener to database: " <> show err
           return True
         _ -> return False
 
@@ -84,7 +84,7 @@ newHasqlBroadcasterForChannel ch getCon = do
   void $ relayMessagesForever multi
   return multi
   where
-    closeProducer _ = putErrLn "Broadcaster is dead"
+    closeProducer _ = PostgresWebsockets.HasqlBroadcast.putErrLn "Broadcaster is dead"
     toMsg :: ByteString -> ByteString -> Message
     toMsg c m = case decode (toS m) of
                    Just v -> Message (channelDef c v) m
